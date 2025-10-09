@@ -1,0 +1,35 @@
+openapi: 3.1.0
+info:
+  title: 아무말 대잔치 커뮤니티 API
+  version: 1.0.0
+servers:
+  - url: 'http://localhost:8080/api/v1'
+paths:
+  /posts/{id}:
+    get:
+      summary: 게시글 상세 조회
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  title:
+                    type: string
+                  content:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+        '404':
+          description: 게시글 없음
