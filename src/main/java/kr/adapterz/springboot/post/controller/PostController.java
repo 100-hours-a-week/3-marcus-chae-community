@@ -1,25 +1,31 @@
 package kr.adapterz.springboot.post.controller;
 
-import kr.adapterz.springboot.post.entity.Post;
-import kr.adapterz.springboot.post.repository.PostRepository;
+import jakarta.validation.Valid;
+import kr.adapterz.springboot.common.auth.CurrentUserProvider;
+import kr.adapterz.springboot.post.dto.PostCreateRequest;
+import kr.adapterz.springboot.post.dto.PostDetailResponse;
+import kr.adapterz.springboot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/posts")
 @RequiredArgsConstructor
 public class PostController {
 
-    private final PostRepository postRepository;
+    private final PostService postService;
+    private final CurrentUserProvider currentUserProvider;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPost(@PathVariable Long id) {
-        return postRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<PostDetailResponse> getPost(@PathVariable Long id) {
+        return ResponseEntity.status(200).body(postService.getPost(id));
+    }
+
+    @PostMapping
+    public ResponseEntity<PostDetailResponse> createPost(@RequestBody @Valid PostCreateRequest req) {
+        Long authorId = currentUserProvider.requireId();
+        PostDetailResponse res = postService.create(req, authorId);
+        return ResponseEntity.status(201).body(res);
     }
 }
