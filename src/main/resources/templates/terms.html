@@ -1,0 +1,148 @@
+<!-- src/main/resources/templates/terms.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${siteName} + ' 이용약관'">이용약관</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root { --fg:#111; --muted:#666; --line:#e5e7eb; }
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); margin:0; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; line-height: 1.6; }
+        h1 { font-size: 28px; margin: 0 0 8px; }
+        .meta { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+        h2 { font-size: 20px; margin: 28px 0 10px; }
+        p, li { margin: 8px 0; }
+        ul { padding-left: 18px; }
+        hr { border:0; border-top:1px solid var(--line); margin: 28px 0; }
+        a { color: inherit; text-decoration: underline; }
+        .toc a { text-decoration: none; }
+        .card { background:#fafafa; border:1px solid var(--line); padding:14px; border-radius:12px; }
+    </style>
+</head>
+<body>
+<main class="wrap" role="main">
+    <header>
+        <h1 th:text="${siteName} + ' 이용약관'">커뮤니티 이용약관</h1>
+        <div class="meta">
+            최종 업데이트:
+            <time th:text="${#temporals.format(lastUpdated, 'yyyy-MM-dd')}">2025-10-20</time>
+        </div>
+    </header>
+
+    <section class="card toc" aria-label="목차">
+        <strong>목차</strong>
+        <ul>
+            <li><a href="#accept">1. 약관의 동의</a></li>
+            <li><a href="#eligibility">2. 이용 자격</a></li>
+            <li><a href="#account">3. 계정 및 보안</a></li>
+            <li><a href="#content">4. 사용자 콘텐츠</a></li>
+            <li><a href="#prohibited">5. 금지 행위</a></li>
+            <li><a href="#ip">6. 지식재산권</a></li>
+            <li><a href="#privacy">7. 개인정보 보호</a></li>
+            <li><a href="#termination">8. 서비스 이용 종료</a></li>
+            <li><a href="#disclaimer">9. 면책 및 책임 제한</a></li>
+            <li><a href="#law">10. 준거법 및 분쟁해결</a></li>
+            <li><a href="#contact">11. 문의처</a></li>
+        </ul>
+    </section>
+
+    <section id="accept">
+        <h2>1. 약관의 동의</h2>
+        <p>
+            본 약관은 <span th:text="${siteName}">우리 커뮤니티</span>(이하 “서비스”) 이용과 관련하여
+            서비스와 회원 간의 권리·의무 및 책임사항을 규정합니다.
+            회원은 회원가입 또는 서비스를 이용함으로써 본 약관에 동의한 것으로 봅니다.
+        </p>
+    </section>
+
+    <section id="eligibility">
+        <h2>2. 이용 자격</h2>
+        <p>만 14세 이상이며, 관련 법령 및 본 약관을 준수할 수 있는 자만 서비스를 이용할 수 있습니다.</p>
+    </section>
+
+    <section id="account">
+        <h2>3. 계정 및 보안</h2>
+        <ul>
+            <li>회원은 정확하고 최신의 정보를 제공해야 합니다.</li>
+            <li>계정 보안 유지에 대한 책임은 회원에게 있으며, 무단 사용이 의심될 경우 즉시 통지해야 합니다.</li>
+        </ul>
+    </section>
+
+    <section id="content">
+        <h2>4. 사용자 콘텐츠</h2>
+        <p>
+            회원이 게시하는 글·댓글·이미지 등(“콘텐츠”)에 대한 권리는 원칙적으로 회원에게 있습니다.
+            다만, 서비스 운영·홍보를 위한 비독점적 사용권을 <span th:text="${siteName}">서비스</span>에
+            허여하는 것에 동의합니다(게시물 노출, 썸네일 생성 등).
+        </p>
+        <p>회원은 제3자의 권리를 침해하지 않도록 주의해야 하며, 관련 분쟁의 책임은 회원에게 있습니다.</p>
+    </section>
+
+    <section id="prohibited">
+        <h2>5. 금지 행위</h2>
+        <ul>
+            <li>불법, 음란, 혐오, 차별, 폭력 조장 등 법령 및 공서양속에 반하는 게시물 작성</li>
+            <li>스팸·홍보·광고성 행위(운영 정책으로 허용한 경우 제외)</li>
+            <li>타인의 개인정보·계정 도용, 서비스 장애를 유발하는 기술적 행위</li>
+            <li>지식재산권, 초상권 등 타인의 권리 침해</li>
+        </ul>
+    </section>
+
+    <section id="ip">
+        <h2>6. 지식재산권</h2>
+        <p>
+            서비스에 제공되는 소프트웨어, UI, 로고 등 일체의 권리는
+            <span th:text="${siteName}">서비스</span> 또는 정당한 권리자에게 귀속됩니다.
+            약관 또는 별도의 허락 없이 이를 사용·복제·배포할 수 없습니다.
+        </p>
+    </section>
+
+    <section id="privacy">
+        <h2>7. 개인정보 보호</h2>
+        <p>
+            개인정보 처리에 관한 사항은 별도의
+            <a th:href="@{/privacy}" href="/privacy">개인정보 처리방침</a>을 따릅니다.
+        </p>
+    </section>
+
+    <section id="termination">
+        <h2>8. 서비스 이용 종료</h2>
+        <p>
+            회원은 언제든지 계정 설정에서 탈퇴할 수 있으며, 서비스는 약관 위반 시 사전 통지 후
+            이용을 제한하거나 해지할 수 있습니다(긴급한 경우 사후 통지).
+        </p>
+    </section>
+
+    <section id="disclaimer">
+        <h2>9. 면책 및 책임 제한</h2>
+        <p>
+            서비스는 천재지변, 불가항력, 제3자 통신 장애 등으로 인한 손해에 책임을 지지 않습니다.
+            서비스는 “있는 그대로” 제공되며, 특정 목적 적합성에 대한 묵시적 보증을 포함하여
+            일체의 보증을 하지 않습니다. 법이 허용하는 범위 내에서 서비스의 총 책임은
+            최근 3개월간 회원이 서비스에 지불한 금액을 한도로 합니다(무상 서비스는 제외).
+        </p>
+    </section>
+
+    <section id="law">
+        <h2>10. 준거법 및 분쟁해결</h2>
+        <p>본 약관은 대한민국 법률을 따르며, 분쟁은 관할 법원에 제기합니다.</p>
+    </section>
+
+    <section id="contact">
+        <h2>11. 문의처</h2>
+        <p>
+            약관 관련 문의:
+            <a th:href="'mailto:' + ${contactEmail}"
+               th:text="${contactEmail}">contact@example.com</a>
+        </p>
+    </section>
+
+    <hr />
+    <footer class="meta">
+        &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span>
+        <span th:text="${siteName}">커뮤니티</span>. All rights reserved.
+    </footer>
+</main>
+</body>
+</html>

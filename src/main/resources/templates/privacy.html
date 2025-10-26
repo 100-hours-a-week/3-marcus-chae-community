@@ -1,0 +1,267 @@
+<!-- src/main/resources/templates/privacy.html -->
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title th:text="${siteName} + ' 개인정보 처리방침'">개인정보 처리방침</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+        :root { --fg:#111; --muted:#666; --line:#e5e7eb; }
+        body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--fg); margin:0; }
+        .wrap { max-width: 860px; margin: 0 auto; padding: 40px 20px 80px; line-height: 1.6; }
+        h1 { font-size: 28px; margin: 0 0 8px; }
+        .meta { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+        h2 { font-size: 20px; margin: 28px 0 10px; }
+        h3 { font-size: 16px; margin: 20px 0 8px; font-weight: 600; }
+        p, li { margin: 8px 0; }
+        ul { padding-left: 18px; }
+        hr { border:0; border-top:1px solid var(--line); margin: 28px 0; }
+        a { color: inherit; text-decoration: underline; }
+        .toc a { text-decoration: none; }
+        .card { background:#fafafa; border:1px solid var(--line); padding:14px; border-radius:12px; }
+        table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        th, td { border: 1px solid var(--line); padding: 10px; text-align: left; }
+        th { background: #fafafa; font-weight: 600; }
+    </style>
+</head>
+<body>
+<main class="wrap" role="main">
+    <header>
+        <h1 th:text="${siteName} + ' 개인정보 처리방침'">커뮤니티 개인정보 처리방침</h1>
+        <div class="meta">
+            최종 업데이트:
+            <time th:text="${#temporals.format(lastUpdated, 'yyyy-MM-dd')}">2025-10-26</time>
+        </div>
+    </header>
+
+    <section class="card toc" aria-label="목차">
+        <strong>목차</strong>
+        <ul>
+            <li><a href="#overview">1. 개요</a></li>
+            <li><a href="#collection">2. 수집하는 개인정보 항목 및 수집 방법</a></li>
+            <li><a href="#purpose">3. 개인정보의 수집 및 이용 목적</a></li>
+            <li><a href="#retention">4. 개인정보의 보유 및 이용 기간</a></li>
+            <li><a href="#provision">5. 개인정보의 제3자 제공</a></li>
+            <li><a href="#consignment">6. 개인정보 처리의 위탁</a></li>
+            <li><a href="#destruction">7. 개인정보의 파기 절차 및 방법</a></li>
+            <li><a href="#rights">8. 정보주체의 권리·의무 및 행사 방법</a></li>
+            <li><a href="#security">9. 개인정보의 안전성 확보 조치</a></li>
+            <li><a href="#cookies">10. 쿠키의 운영 및 거부</a></li>
+            <li><a href="#dpo">11. 개인정보 보호책임자</a></li>
+            <li><a href="#changes">12. 개인정보 처리방침의 변경</a></li>
+        </ul>
+    </section>
+
+    <section id="overview">
+        <h2>1. 개요</h2>
+        <p>
+            <span th:text="${siteName}">우리 커뮤니티</span>(이하 "회사")는 「개인정보 보호법」 제30조에 따라
+            정보주체의 개인정보를 보호하고 이와 관련한 고충을 신속하고 원활하게 처리할 수 있도록
+            다음과 같이 개인정보 처리방침을 수립·공개합니다.
+        </p>
+    </section>
+
+    <section id="collection">
+        <h2>2. 수집하는 개인정보 항목 및 수집 방법</h2>
+
+        <h3>2.1 수집 항목</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>수집 시점</th>
+                    <th>수집 항목</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>회원가입</td>
+                    <td>이메일, 비밀번호(암호화), 닉네임</td>
+                </tr>
+                <tr>
+                    <td>서비스 이용</td>
+                    <td>게시글, 댓글, 프로필 이미지(선택)</td>
+                </tr>
+                <tr>
+                    <td>자동 수집</td>
+                    <td>IP 주소, 쿠키, 접속 로그, 서비스 이용 기록</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>2.2 수집 방법</h3>
+        <ul>
+            <li>회원가입 및 서비스 이용 과정에서 이용자가 직접 제공</li>
+            <li>서비스 이용 중 자동 생성·수집</li>
+        </ul>
+    </section>
+
+    <section id="purpose">
+        <h2>3. 개인정보의 수집 및 이용 목적</h2>
+        <ul>
+            <li><strong>회원 관리:</strong> 본인 확인, 회원제 서비스 제공, 부정 이용 방지</li>
+            <li><strong>서비스 제공:</strong> 게시판 운영, 댓글 작성, 콘텐츠 제공</li>
+            <li><strong>서비스 개선:</strong> 신규 서비스 개발, 통계 분석, 맞춤형 서비스 제공</li>
+            <li><strong>고충 처리:</strong> 민원 처리, 공지사항 전달</li>
+        </ul>
+    </section>
+
+    <section id="retention">
+        <h2>4. 개인정보의 보유 및 이용 기간</h2>
+        <p>
+            회사는 법령에 따른 보존 의무가 있는 경우를 제외하고, 개인정보의 수집 및 이용 목적이
+            달성되면 지체 없이 파기합니다.
+        </p>
+
+        <h3>4.1 회원 정보</h3>
+        <ul>
+            <li>보유 기간: 회원 탈퇴 시까지</li>
+            <li>탈퇴 후: 즉시 파기 (단, 관련 법령에 따라 보존이 필요한 경우 별도 보관)</li>
+        </ul>
+
+        <h3>4.2 법령에 따른 보존</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>보존 항목</th>
+                    <th>근거 법령</th>
+                    <th>보존 기간</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>계약 또는 청약철회 등에 관한 기록</td>
+                    <td>전자상거래법</td>
+                    <td>5년</td>
+                </tr>
+                <tr>
+                    <td>대금결제 및 재화 등의 공급에 관한 기록</td>
+                    <td>전자상거래법</td>
+                    <td>5년</td>
+                </tr>
+                <tr>
+                    <td>소비자 불만 또는 분쟁처리에 관한 기록</td>
+                    <td>전자상거래법</td>
+                    <td>3년</td>
+                </tr>
+                <tr>
+                    <td>접속 로그 기록</td>
+                    <td>통신비밀보호법</td>
+                    <td>3개월</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section id="provision">
+        <h2>5. 개인정보의 제3자 제공</h2>
+        <p>
+            회사는 원칙적으로 이용자의 개인정보를 제3자에게 제공하지 않습니다.
+            다만, 다음의 경우에는 예외로 합니다.
+        </p>
+        <ul>
+            <li>이용자가 사전에 동의한 경우</li>
+            <li>법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우</li>
+        </ul>
+    </section>
+
+    <section id="consignment">
+        <h2>6. 개인정보 처리의 위탁</h2>
+        <p>
+            현재 회사는 개인정보 처리 업무를 외부에 위탁하고 있지 않습니다.
+            향후 위탁이 필요한 경우 사전에 공지하고 동의를 받겠습니다.
+        </p>
+    </section>
+
+    <section id="destruction">
+        <h2>7. 개인정보의 파기 절차 및 방법</h2>
+
+        <h3>7.1 파기 절차</h3>
+        <p>
+            이용자가 회원가입 등을 위해 입력한 정보는 목적이 달성된 후 별도의 DB로 옮겨져
+            내부 방침 및 관련 법령에 따라 일정 기간 저장된 후 파기됩니다.
+        </p>
+
+        <h3>7.2 파기 방법</h3>
+        <ul>
+            <li>전자적 파일: 복구 불가능한 방법으로 영구 삭제</li>
+            <li>종이 문서: 분쇄기로 분쇄하거나 소각</li>
+        </ul>
+    </section>
+
+    <section id="rights">
+        <h2>8. 정보주체의 권리·의무 및 행사 방법</h2>
+        <p>이용자는 언제든지 다음과 같은 권리를 행사할 수 있습니다.</p>
+        <ul>
+            <li>개인정보 열람 요구</li>
+            <li>개인정보 정정·삭제 요구</li>
+            <li>개인정보 처리 정지 요구</li>
+        </ul>
+        <p>
+            권리 행사는 회원 정보 수정 기능 또는 개인정보 보호책임자에게 서면, 이메일 등으로
+            연락하시면 지체 없이 조치하겠습니다.
+        </p>
+    </section>
+
+    <section id="security">
+        <h2>9. 개인정보의 안전성 확보 조치</h2>
+        <p>회사는 개인정보의 안전성 확보를 위해 다음과 같은 조치를 취하고 있습니다.</p>
+        <ul>
+            <li><strong>관리적 조치:</strong> 내부관리계획 수립·시행, 정기적 직원 교육</li>
+            <li><strong>기술적 조치:</strong> 비밀번호 암호화, 접근 권한 관리, 보안프로그램 설치</li>
+            <li><strong>물리적 조치:</strong> 전산실 및 자료보관실 등의 접근 통제</li>
+        </ul>
+    </section>
+
+    <section id="cookies">
+        <h2>10. 쿠키의 운영 및 거부</h2>
+
+        <h3>10.1 쿠키의 사용 목적</h3>
+        <ul>
+            <li>로그인 세션 유지</li>
+            <li>서비스 이용 편의 제공</li>
+            <li>접속 빈도 및 방문 시간 파악을 통한 서비스 개선</li>
+        </ul>
+
+        <h3>10.2 쿠키 설정 거부 방법</h3>
+        <p>
+            브라우저 설정에서 쿠키 허용 여부를 선택할 수 있습니다.
+            다만, 쿠키 설치를 거부할 경우 일부 서비스 이용에 제한이 있을 수 있습니다.
+        </p>
+    </section>
+
+    <section id="dpo">
+        <h2>11. 개인정보 보호책임자</h2>
+        <p>
+            회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고,
+            개인정보 처리와 관련한 정보주체의 불만처리 및 피해구제를 위하여
+            아래와 같이 개인정보 보호책임자를 지정하고 있습니다.
+        </p>
+        <div class="card">
+            <p><strong>개인정보 보호책임자</strong></p>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>이메일: <a th:href="'mailto:' + ${contactEmail}" th:text="${contactEmail}">privacy@example.com</a></li>
+                <li>문의: 서비스 내 고객센터 또는 이메일</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="changes">
+        <h2>12. 개인정보 처리방침의 변경</h2>
+        <p>
+            본 개인정보 처리방침은 시행일로부터 적용되며, 법령 및 방침에 따른 변경 내용의 추가,
+            삭제 및 정정이 있는 경우에는 변경사항의 시행 7일 전부터 공지사항을 통하여 고지할 것입니다.
+        </p>
+        <ul>
+            <li>공고일자: <time th:text="${#temporals.format(lastUpdated, 'yyyy-MM-dd')}">2025-10-26</time></li>
+            <li>시행일자: <time th:text="${#temporals.format(lastUpdated, 'yyyy-MM-dd')}">2025-10-26</time></li>
+        </ul>
+    </section>
+
+    <hr />
+    <footer class="meta">
+        &copy; <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span>
+        <span th:text="${siteName}">커뮤니티</span>. All rights reserved.
+    </footer>
+</main>
+</body>
+</html>

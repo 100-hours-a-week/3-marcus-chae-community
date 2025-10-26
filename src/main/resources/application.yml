@@ -19,4 +19,7 @@ server:
 
 logging:
   level:
+    root: WARN
+    kr.adapterz: INFO
     org.hibernate.SQL: debug
+  exception-conversion-word: '%ex{short}'
