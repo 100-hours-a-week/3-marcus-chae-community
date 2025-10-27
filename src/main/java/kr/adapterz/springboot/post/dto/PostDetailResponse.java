@@ -7,9 +7,5 @@ public record PostDetailResponse(
         String title,
         String content,
         LocalDateTime createdAt
-//        int likeCount,
-//        int commentCount,
-//        int viewCount,
-//        boolean likedByViewer
 ) {
 }
