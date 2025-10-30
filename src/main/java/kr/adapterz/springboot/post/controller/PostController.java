@@ -1,7 +1,7 @@
 package kr.adapterz.springboot.post.controller;
 
 import jakarta.validation.Valid;
-import kr.adapterz.springboot.common.auth.CurrentUserProvider;
+import kr.adapterz.springboot.auth.CurrentUserIdProvider;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
 import kr.adapterz.springboot.post.dto.PostDetailResponse;
@@ -19,11 +19,11 @@ import java.time.LocalDateTime;
 public class PostController {
 
     private final PostService postService;
-    private final CurrentUserProvider currentUserProvider;
+    private final CurrentUserIdProvider currentUserIdProvider;
 
     @PostMapping
     public ResponseEntity<PostDetailResponse> createPost(@RequestBody @Valid PostCreateRequest req) {
-        Long authorId = currentUserProvider.requireId();
+        Long authorId = currentUserIdProvider.requireId();
         PostDetailResponse res = postService.create(req, authorId);
         return ResponseEntity.status(201).body(res);
     }
@@ -47,4 +47,6 @@ public class PostController {
 
         return ResponseEntity.status(200).body(res);
     }
+
+
 }

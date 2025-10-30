@@ -2,6 +2,7 @@ package kr.adapterz.springboot.user.service;
 
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
+import kr.adapterz.springboot.auth.session.SessionManager;
 import kr.adapterz.springboot.user.dto.SignupRequest;
 import kr.adapterz.springboot.user.entity.User;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final SessionManager sessionManager;
 
     @Transactional
     public void signup(@Valid SignupRequest req) {

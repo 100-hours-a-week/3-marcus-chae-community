@@ -1,6 +1,6 @@
-package kr.adapterz.springboot.common.auth.impl;
+package kr.adapterz.springboot.auth.impl;
 
-import kr.adapterz.springboot.common.auth.CurrentUserProvider;
+import kr.adapterz.springboot.auth.CurrentUserIdProvider;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -9,12 +9,12 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import java.util.Optional;
 
 /**
- * <b>주의: 임시 구현체</b></br>
- * 개발과정에서 JWT 인증 구현 전에 요청자의 id를 요청 메세지에서 얻기 위해 만든 임시 구현체. X-USER-ID 같은 헤더는 비표준이며 권장되지 않기 때문에 추후 꼭 대체되어야함.
+ * @deprecated 임시 구현체였으며 인증 절차 구현됨. 사용 금지.
  */
 @Component
 @Profile({"dev"})
-public class HeaderCurrentUserProvider implements CurrentUserProvider {
+@Deprecated
+public class HeaderCurrentUserIdProvider implements CurrentUserIdProvider {
     private static final String HEADER = "X-USER-ID";
 
     @Override

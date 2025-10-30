@@ -1,12 +1,18 @@
 package kr.adapterz.springboot.common.exception;
 
+import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
+import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
+import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
@@ -15,6 +21,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthenticatedException.class)
     public ResponseEntity<String> handleUnauthenticated() {
         return ResponseEntity.status(401).body("인증이 필요합니다.");
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<String> handleInvalidCredentials() {
+        return ResponseEntity.status(401).body("이메일 또는 비밀번호가 일치하지 않습니다.");
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -27,9 +38,23 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body("게시글을 찾을 수 없습니다.");
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFound() {
+        return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+    }
+
+    /**
+     *
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
-        return ResponseEntity.badRequest().body("요청 형식이 잘못되었습니다.");
+        // validation의 필드 에러 메시지 전부 그대로 전달
+        String errorMessage = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .collect(Collectors.joining(", "));
+        return ResponseEntity.badRequest().body(errorMessage);
     }
 
     @ExceptionHandler(Exception.class)

@@ -21,7 +21,7 @@ public class User {
     private String email;
 
     @Column(nullable = false, length = 60)
-    private String passwordHash;
+    private String password;
 
     @Setter
     @Column(nullable = false, length = 10)
@@ -42,9 +42,9 @@ public class User {
     @OneToMany(mappedBy = "author")
     private List<Post> posts;
 
-    public User(String email, String passwordHash, String nickname) {
+    public User(String email, String password, String nickname) {
         this.email = email;
-        this.passwordHash = passwordHash;
+        this.password = password;
         this.nickname = nickname;
     }
 
