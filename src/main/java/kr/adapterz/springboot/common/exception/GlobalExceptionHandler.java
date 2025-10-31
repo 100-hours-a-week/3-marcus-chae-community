@@ -4,6 +4,7 @@ import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
+import kr.adapterz.springboot.user.exception.NicknameAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +32,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<String> handleEmailAlreadyExists() {
         return ResponseEntity.status(409).body("이미 존재하는 이메일입니다.");
+    }
+
+    @ExceptionHandler(NicknameAlreadyExistsException.class)
+    public ResponseEntity<String> handleNicknameAlreadyExists() {
+        return ResponseEntity.status(409).body("이미 존재하는 닉네임입니다.");
     }
 
     @ExceptionHandler(PostNotFoundException.class)
