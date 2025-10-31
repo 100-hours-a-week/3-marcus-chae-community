@@ -5,6 +5,7 @@ import kr.adapterz.springboot.auth.constants.AuthConstants;
 import kr.adapterz.springboot.auth.dto.LoginRequest;
 import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.session.SessionManager;
+import kr.adapterz.springboot.auth.utils.PasswordUtils;
 import kr.adapterz.springboot.user.entity.User;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import kr.adapterz.springboot.user.repository.UserRepository;
@@ -29,11 +30,13 @@ public class AuthController {
         User user = userRepository.findByEmail(req.email())
                 .orElseThrow(UserNotFoundException::new);
 
-        if (!checkPassword(user, req.password())) {
+        if (!PasswordUtils.matches(user, req.password(), passwordEncoder)) {
             throw new InvalidCredentialsException();
         }
 
         String sessionId = sessionManager.createSession(user.getId()).getSessionId();
+
+        // 응답에 넣을 Set-Cookie 값
         ResponseCookie cookie = ResponseCookie
                 .from(AuthConstants.SESSION_COOKIE_NAME, sessionId)
                 .build();
@@ -47,9 +50,5 @@ public class AuthController {
     public ResponseEntity<Void> logout(@CookieValue(AuthConstants.SESSION_COOKIE_NAME) String sessionId) {
         sessionManager.expire(sessionId);
         return ResponseEntity.ok().build();
-    }
-
-    private boolean checkPassword(User user, String rawPassword) {
-        return passwordEncoder.matches(rawPassword, user.getPassword());
     }
 }

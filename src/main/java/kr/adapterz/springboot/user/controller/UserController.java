@@ -1,10 +1,11 @@
 package kr.adapterz.springboot.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kr.adapterz.springboot.auth.filter.SessionAuthFilter;
-import kr.adapterz.springboot.auth.session.Session;
-import kr.adapterz.springboot.auth.session.SessionManager;
+import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
+import kr.adapterz.springboot.user.dto.EditNicknameRequest;
+import kr.adapterz.springboot.user.dto.EditPasswordRequest;
 import kr.adapterz.springboot.user.dto.SignupRequest;
 import kr.adapterz.springboot.user.dto.UserDetailResponse;
 import kr.adapterz.springboot.user.service.UserService;
@@ -18,27 +19,47 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-    private final SessionManager sessionManager;
 
-    /**
-     * 회원정보 조회
-     * @param request
-     * @return
-     */
+    @PostMapping
+    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest request) {
+        userService.signup(request);
+        return ResponseEntity.status(HttpServletResponse.SC_CREATED).build();
+    }
+
     @GetMapping("/me")
     public ResponseEntity<UserDetailResponse> getMyInfo(HttpServletRequest request) {
-        // HttpServletRequest로부터 세션 ID 추출
-        String sessionId = SessionAuthFilter.extractSessionId(request);
-        // 세션매니저로부터 세션 객체 획득
-        Session session = sessionManager.requireSession(sessionId);
-        UserDetailResponse response = userService.getUserDetail(session.getUserId());
-
+        Long userId = SessionCookieUtils.extractUserId(request);
+        UserDetailResponse response = userService.getUserDetail(userId);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping
-    public ResponseEntity<Void> signup(@RequestBody @Valid SignupRequest req) {
-        userService.signup(req);
-        return ResponseEntity.status(201).build();
+    @PatchMapping("/me/nickname")
+    public ResponseEntity<UserDetailResponse> editNickname(
+            HttpServletRequest request,
+            @RequestBody @Valid EditNicknameRequest body
+    ) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        UserDetailResponse response = userService.editNickname(userId, body);
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/me/password")
+    public ResponseEntity<Void> editPassword(
+            HttpServletRequest request,
+            @RequestBody @Valid EditPasswordRequest body
+    ) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        userService.editPassword(userId, body);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * 회원탈퇴
+     */
+    @DeleteMapping
+    public ResponseEntity<Void> withdraw(HttpServletRequest request) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        userService.withdraw(userId);
+        return ResponseEntity.noContent().build();
     }
 }

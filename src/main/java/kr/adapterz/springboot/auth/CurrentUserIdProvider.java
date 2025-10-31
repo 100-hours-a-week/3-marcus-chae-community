@@ -4,6 +4,7 @@ import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 
 import java.util.Optional;
 
+@Deprecated
 public interface CurrentUserIdProvider {
 
     Optional<Long> getId();

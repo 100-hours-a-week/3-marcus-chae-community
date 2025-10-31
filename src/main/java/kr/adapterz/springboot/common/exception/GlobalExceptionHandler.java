@@ -4,6 +4,7 @@ import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
+import kr.adapterz.springboot.user.exception.InvalidPasswordException;
 import kr.adapterz.springboot.user.exception.NicknameAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -49,9 +50,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
     }
 
-    /**
-     *
-     */
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<String> handleInvalidPassword() {
+        return ResponseEntity.status(400).body("기존 비밀번호가 일치하지 않습니다.");
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<String> handleValidation(MethodArgumentNotValidException ex) {
         // validation의 필드 에러 메시지 전부 그대로 전달

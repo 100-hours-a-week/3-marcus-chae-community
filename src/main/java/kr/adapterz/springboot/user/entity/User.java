@@ -20,6 +20,7 @@ public class User {
     @Column(nullable = false, unique = true, length = 320)
     private String email;
 
+    @Setter
     @Column(nullable = false, length = 60)
     private String password;
 
