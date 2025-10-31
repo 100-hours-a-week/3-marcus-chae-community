@@ -29,7 +29,7 @@ public class SessionAuthFilter extends OncePerRequestFilter {
     // 필터 제외 경로 설정
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
+        String path = request.getServletPath(); // context path 제외한 경로
         String method = request.getMethod();
 
         boolean isExcludedPath = Arrays.stream(EXCLUDED_PATHS).anyMatch(path::startsWith);
@@ -39,9 +39,7 @@ public class SessionAuthFilter extends OncePerRequestFilter {
     }
 
     /**
-     * {@link #shouldNotFilter(HttpServletRequest)}에서 허용한 경우를 제외하고 적용할 필터 .
-     *
-     *
+     * {@link #shouldNotFilter(HttpServletRequest)}에서 허용한 경우를 제외하고 적용할 필터.
      */
     @Override
     protected void doFilterInternal(
@@ -50,14 +48,21 @@ public class SessionAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain chain
     ) throws IOException, ServletException {
 
-        // 요청에서 세션 ID 추출
-        String sessionId = extractSessionId(request);
+        try {
+            // 요청에서 세션 ID 추출
+            String sessionId = extractSessionId(request);
 
-        // 세션 스토어에 저장돼있는지 검증, 없으면 예외 응답
-        sessionManager.requireSession(sessionId);
+            // 세션 스토어에 저장돼있는지 검증, 없으면 예외 발생
+            sessionManager.requireSession(sessionId);
 
-        // 유효한 세션을 가진 요청임이 확인되었으므로 다음으로 진행
-        chain.doFilter(request, response);
+            // 유효한 세션을 가진 요청임이 확인되었으므로 다음으로 진행
+            chain.doFilter(request, response);
+        } catch (UnauthenticatedException e) {
+            // Filter에서 발생한 예외는 @RestControllerAdvice가 처리하지 못하므로 직접 응답
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json;charset=UTF-8");
+            response.getWriter().write("{\"message\":\"인증이 필요합니다.\"}");
+        }
     }
 
     /**
