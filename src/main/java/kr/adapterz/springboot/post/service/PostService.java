@@ -1,9 +1,11 @@
 package kr.adapterz.springboot.post.service;
 
 
+import kr.adapterz.springboot.auth.exception.UnauthorizedException;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
 import kr.adapterz.springboot.post.dto.PostDetailResponse;
+import kr.adapterz.springboot.post.dto.PostUpdateRequest;
 import kr.adapterz.springboot.post.entity.Post;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.post.repository.PostRepository;
@@ -76,5 +78,36 @@ public class PostService {
         }
 
         return new PostChunkResponse(summaries, cursorInfo);
+    }
+
+    @Transactional
+    public PostDetailResponse update(Long requestingUserId, Long targetPostId, PostUpdateRequest request) {
+        // 요청 유저가 대상 게시글의 작성자와 일치하는지 확인
+        Post targetPost = postRepository.findById(targetPostId).orElseThrow(PostNotFoundException::new);
+        if (!targetPost.getAuthor().getId().equals(requestingUserId)) {
+            throw new UnauthorizedException();
+        }
+
+        // 부분 업데이트
+        if (request.newTitle() != null) {
+            targetPost.setTitle(request.newTitle());
+        }
+        if (request.newContent() != null) {
+            targetPost.setContent(request.newContent());
+        }
+
+        // 자동 dirty check이 발생하니 save() 생략
+
+        return PostDetailResponse.from(targetPost);
+    }
+
+    @Transactional
+    public void delete(Long requestingUserId, Long targetPostId) {
+        Post targetPost = postRepository.findById(targetPostId).orElseThrow(PostNotFoundException::new);
+        if (!targetPost.getAuthor().getId().equals(requestingUserId)) {
+            throw new UnauthorizedException();
+        }
+
+        postRepository.deleteById(targetPostId);
     }
 }

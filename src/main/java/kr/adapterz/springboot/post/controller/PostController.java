@@ -6,6 +6,7 @@ import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
 import kr.adapterz.springboot.post.dto.PostDetailResponse;
+import kr.adapterz.springboot.post.dto.PostUpdateRequest;
 import kr.adapterz.springboot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -51,5 +52,24 @@ public class PostController {
         return ResponseEntity.status(200).body(res);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<PostDetailResponse> update(
+            HttpServletRequest request,
+            @PathVariable(name = "id") Long postId,
+            @RequestBody @Valid PostUpdateRequest body
+    ) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        PostDetailResponse response = postService.update(userId, postId, body);
+        return ResponseEntity.ok(response);
+    }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(
+            HttpServletRequest request,
+            @PathVariable(name = "id") Long postId
+    ) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        postService.delete(userId, postId);
+        return ResponseEntity.noContent().build();
+    }
 }

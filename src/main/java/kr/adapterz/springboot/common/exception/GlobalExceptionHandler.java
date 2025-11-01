@@ -2,6 +2,7 @@ package kr.adapterz.springboot.common.exception;
 
 import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
+import kr.adapterz.springboot.auth.exception.UnauthorizedException;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.InvalidPasswordException;
@@ -9,7 +10,9 @@ import kr.adapterz.springboot.user.exception.NicknameAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -29,6 +32,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidCredentialsException.class)
     public ResponseEntity<String> handleInvalidCredentials() {
         return ResponseEntity.status(401).body("이메일 또는 비밀번호가 일치하지 않습니다.");
+    }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<String> handleUnauthorized() {
+        return ResponseEntity.status(403).body("권한이 없습니다.");
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -54,6 +62,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<String> handleInvalidPassword() {
         return ResponseEntity.status(400).body("기존 비밀번호가 일치하지 않습니다.");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<String> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        String message = String.format("'%s' 메서드는 지원하지 않습니다.", ex.getMethod());
+        return ResponseEntity.status(405).body(message);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<String> handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
+        log.warn("요청 본문 파싱 오류: {}", ex.getMessage());
+        return ResponseEntity.badRequest().body("요청 본문이 올바르지 않습니다.");
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
