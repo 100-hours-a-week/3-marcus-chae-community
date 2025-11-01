@@ -1,7 +1,8 @@
 package kr.adapterz.springboot.post.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kr.adapterz.springboot.auth.CurrentUserIdProvider;
+import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
 import kr.adapterz.springboot.post.dto.PostDetailResponse;
@@ -19,13 +20,15 @@ import java.time.LocalDateTime;
 public class PostController {
 
     private final PostService postService;
-    private final CurrentUserIdProvider currentUserIdProvider;
 
     @PostMapping
-    public ResponseEntity<PostDetailResponse> createPost(@RequestBody @Valid PostCreateRequest req) {
-        Long authorId = currentUserIdProvider.requireId();
-        PostDetailResponse res = postService.create(req, authorId);
-        return ResponseEntity.status(201).body(res);
+    public ResponseEntity<PostDetailResponse> createPost(
+            HttpServletRequest request,
+            @RequestBody @Valid PostCreateRequest body
+    ) {
+        Long userId = SessionCookieUtils.extractUserId(request);
+        PostDetailResponse response = postService.create(body, userId);
+        return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/{id}")
