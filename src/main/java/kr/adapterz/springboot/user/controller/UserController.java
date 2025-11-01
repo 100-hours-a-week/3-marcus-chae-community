@@ -7,7 +7,7 @@ import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
 import kr.adapterz.springboot.user.dto.EditNicknameRequest;
 import kr.adapterz.springboot.user.dto.EditPasswordRequest;
 import kr.adapterz.springboot.user.dto.SignupRequest;
-import kr.adapterz.springboot.user.dto.UserDetailResponse;
+import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,19 +27,19 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserDetailResponse> getMyInfo(HttpServletRequest request) {
+    public ResponseEntity<MyProfileResponse> getMyInfo(HttpServletRequest request) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        UserDetailResponse response = userService.getUserDetail(userId);
+        MyProfileResponse response = userService.getUserDetail(userId);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/me/nickname")
-    public ResponseEntity<UserDetailResponse> editNickname(
+    public ResponseEntity<MyProfileResponse> editNickname(
             HttpServletRequest request,
             @RequestBody @Valid EditNicknameRequest body
     ) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        UserDetailResponse response = userService.editNickname(userId, body);
+        MyProfileResponse response = userService.editNickname(userId, body);
         return ResponseEntity.ok(response);
     }
 

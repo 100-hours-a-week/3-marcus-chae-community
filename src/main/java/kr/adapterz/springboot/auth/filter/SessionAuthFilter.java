@@ -26,12 +26,12 @@ public class SessionAuthFilter extends OncePerRequestFilter {
         String path = request.getServletPath(); // context path 제외한 경로
         String method = request.getMethod();
 
-        // /auth는 POST(로그인)만 제외, DELETE(로그아웃)는 인증 필요
         boolean isLoginRequest = path.equals("/auth") && "POST".equals(method);
         boolean isErrorPage = path.startsWith("/error");
         boolean isSignupRequest = path.startsWith("/users") && "POST".equals(method);
+        boolean isGetPostsRequest = path.startsWith("/posts") && "GET".equals(method);
 
-        return isLoginRequest || isErrorPage || isSignupRequest;
+        return isLoginRequest || isErrorPage || isSignupRequest || isGetPostsRequest;
     }
 
     /**

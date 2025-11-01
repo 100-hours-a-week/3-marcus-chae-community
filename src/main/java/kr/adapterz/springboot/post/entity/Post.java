@@ -16,28 +16,19 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Setter
     @Column(length = 26, nullable = false)
     private String title;
-
-    @Setter
-    @Column(columnDefinition = "VARBINARY(1024)")
-    private byte[] image;
-
     @Setter
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
-
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
     private LocalDateTime deletedAt;
 
-    @Setter
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "author_id")
     private User author;

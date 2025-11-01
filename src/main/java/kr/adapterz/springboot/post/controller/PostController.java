@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDetailResponse> createPost(
+    public ResponseEntity<PostDetailResponse> create(
             HttpServletRequest request,
             @RequestBody @Valid PostCreateRequest body
     ) {
@@ -32,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailResponse> getPost(@PathVariable Long id) {
+    public ResponseEntity<PostDetailResponse> get(@PathVariable Long id) {
         return ResponseEntity.status(200).body(postService.get(id));
     }
 

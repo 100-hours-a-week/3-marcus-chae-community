@@ -10,9 +10,6 @@ public record PostCreateRequest(
 
         @NotBlank
         @Size(max = 15000) // MySQL TEXT 타입 고려한 한글 글자수 제한
-        String content,
-
-        @Size(max = 1024)
-        byte[] image
+        String content
 ) {
 }

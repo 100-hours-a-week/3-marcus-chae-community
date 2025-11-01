@@ -13,6 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.IntStream;
 
+/**
+ * 더미 유저데이터 생성기
+ */
 @Configuration
 @Profile("dev")
 @RequiredArgsConstructor
@@ -33,7 +36,7 @@ public class SeedConfig {
 
         // tester1 ~ tester10 계정 더미 데이터
         IntStream.rangeClosed(1, 10).forEach(i -> {
-            String rawPassword = "123aS!" + i;
+            String rawPassword = "123456aS!" + i;
             String encodedPassword = passwordEncoder.encode(rawPassword);
             User user = new User("tester" + i + "@adapterz.kr", encodedPassword, "tester" + i);
             userRepository.save(user);
