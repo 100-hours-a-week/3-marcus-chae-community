@@ -6,6 +6,7 @@ import kr.adapterz.springboot.auth.dto.LoginRequest;
 import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.session.SessionManager;
 import kr.adapterz.springboot.auth.utils.PasswordUtils;
+import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.entity.User;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import kr.adapterz.springboot.user.repository.UserRepository;
@@ -26,7 +27,7 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
 
     @PostMapping
-    public ResponseEntity<Void> login(@RequestBody @Valid LoginRequest req) {
+    public ResponseEntity<MyProfileResponse> login(@RequestBody @Valid LoginRequest req) {
         User user = userRepository.findByEmail(req.email())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -41,9 +42,9 @@ public class AuthController {
                 .from(AuthConstants.SESSION_COOKIE_NAME, sessionId)
                 .build();
 
-        return ResponseEntity.ok()
+        return ResponseEntity.status(201)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .build();
+                .body(MyProfileResponse.from(user));
     }
 
     @DeleteMapping
