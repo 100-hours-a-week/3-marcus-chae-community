@@ -20,18 +20,29 @@ public class SessionAuthFilter extends OncePerRequestFilter {
 
     private final SessionManager sessionManager;
 
-    // 필터 제외 경로 설정
+    /**
+     * 세션 인증 필터 제외 대상
+     */
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getServletPath(); // context path 제외한 경로
+        String path = request.getServletPath();
         String method = request.getMethod();
 
-        boolean isLoginRequest = path.equals("/auth") && "POST".equals(method);
-        boolean isErrorPage = path.startsWith("/error");
-        boolean isSignupRequest = path.startsWith("/users") && "POST".equals(method);
-        boolean isGetPostsRequest = path.startsWith("/posts") && "GET".equals(method);
+        // 공개 페이지 및 개발 도구
+        if (path.startsWith("/error")
+                || path.equals("/privacy")
+                || path.equals("/terms")
+                || path.startsWith("/swagger-ui")
+                || path.startsWith("/v3/api-docs")) {
+            return true;
+        }
 
-        return isLoginRequest || isErrorPage || isSignupRequest || isGetPostsRequest;
+        // API 엔드포인트별 공개 여부 판단
+        return switch (method) {
+            case "POST" -> path.equals("/auth") || path.startsWith("/users");
+            case "GET" -> path.startsWith("/posts");
+            default -> false;
+        };
     }
 
     /**

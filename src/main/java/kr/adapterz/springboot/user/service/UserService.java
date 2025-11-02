@@ -1,8 +1,8 @@
 package kr.adapterz.springboot.user.service;
 
 import kr.adapterz.springboot.auth.utils.PasswordUtils;
-import kr.adapterz.springboot.user.dto.EditNicknameRequest;
-import kr.adapterz.springboot.user.dto.EditPasswordRequest;
+import kr.adapterz.springboot.user.dto.NicknameUpdateRequest;
+import kr.adapterz.springboot.user.dto.PasswordUpdateRequest;
 import kr.adapterz.springboot.user.dto.SignupRequest;
 import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.entity.User;
@@ -37,27 +37,28 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public MyProfileResponse getUserDetail(Long userId) {
+    public MyProfileResponse getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
         return new MyProfileResponse(user.getId(), user.getEmail(), user.getNickname());
     }
 
     @Transactional
-    public MyProfileResponse editNickname(Long userId, EditNicknameRequest request) {
+    public MyProfileResponse updateNickname(Long userId, NicknameUpdateRequest request) {
         // 닉네임 중복 체크
-        if (userRepository.existsByNickname(request.newNickname())) {
+        if (userRepository.existsByNickname(request.nickname())) {
             throw new NicknameAlreadyExistsException();
         }
 
         // 사용자 조회 및 닉네임 변경
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        user.setNickname(request.newNickname());
+        user.setNickname(request.nickname());
+        User savedUser = userRepository.save(user);
 
-        return new MyProfileResponse(user.getId(), user.getEmail(), user.getNickname());
+        return new MyProfileResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname());
     }
 
     @Transactional
-    public void editPassword(Long userId, EditPasswordRequest request) {
+    public void updatePassword(Long userId, PasswordUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
         if (!PasswordUtils.matches(user, request.originalPassword(), passwordEncoder)) {

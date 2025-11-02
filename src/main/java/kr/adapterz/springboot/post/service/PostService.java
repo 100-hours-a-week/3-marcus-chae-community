@@ -2,9 +2,11 @@ package kr.adapterz.springboot.post.service;
 
 
 import kr.adapterz.springboot.auth.exception.UnauthorizedException;
+import kr.adapterz.springboot.comment.dto.CommentResponse;
+import kr.adapterz.springboot.comment.service.CommentService;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
-import kr.adapterz.springboot.post.dto.PostDetailResponse;
+import kr.adapterz.springboot.post.dto.PostResponse;
 import kr.adapterz.springboot.post.dto.PostUpdateRequest;
 import kr.adapterz.springboot.post.entity.Post;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
@@ -24,17 +26,18 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class PostService {
+    private final CommentService commentService;
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
     @Transactional
-    public PostDetailResponse create(PostCreateRequest req, Long authorId) {
+    public PostResponse create(PostCreateRequest req, Long authorId) {
         User author = userRepository.getReferenceById(authorId);
         Post post = new Post(req.title(), req.content(), author);
         Post saved = postRepository.save(post);
 
-        return PostDetailResponse.from(post);
+        return PostResponse.from(post);
     }
 
     /**
@@ -45,10 +48,12 @@ public class PostService {
      * @return
      */
     @Transactional(readOnly = true)
-    public PostDetailResponse get(Long postId) {
+    public PostResponse get(Long postId) {
         Post post = postRepository.findWithAuthorById(postId).orElseThrow(PostNotFoundException::new);
 
-        return PostDetailResponse.from(post);
+        List<CommentResponse> comments = commentService.findByPostId(post.getId());
+
+        return PostResponse.from(post, comments);
     }
 
     @Transactional(readOnly = true)
@@ -81,7 +86,7 @@ public class PostService {
     }
 
     @Transactional
-    public PostDetailResponse update(Long requestingUserId, Long targetPostId, PostUpdateRequest request) {
+    public PostResponse update(Long requestingUserId, Long targetPostId, PostUpdateRequest request) {
         // 요청 유저가 대상 게시글의 작성자와 일치하는지 확인
         Post targetPost = postRepository.findById(targetPostId).orElseThrow(PostNotFoundException::new);
         if (!targetPost.getAuthor().getId().equals(requestingUserId)) {
@@ -89,16 +94,16 @@ public class PostService {
         }
 
         // 부분 업데이트
-        if (request.newTitle() != null) {
-            targetPost.setTitle(request.newTitle());
+        if (request.title() != null) {
+            targetPost.setTitle(request.title());
         }
-        if (request.newContent() != null) {
-            targetPost.setContent(request.newContent());
+        if (request.content() != null) {
+            targetPost.setContent(request.content());
         }
 
-        // 자동 dirty check이 발생하니 save() 생략
+        Post savedPost = postRepository.save(targetPost);
 
-        return PostDetailResponse.from(targetPost);
+        return PostResponse.from(savedPost);
     }
 
     @Transactional

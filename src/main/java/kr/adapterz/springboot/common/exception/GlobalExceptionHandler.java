@@ -3,6 +3,7 @@ package kr.adapterz.springboot.common.exception;
 import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 import kr.adapterz.springboot.auth.exception.UnauthorizedException;
+import kr.adapterz.springboot.comment.exception.CommentNotFoundException;
 import kr.adapterz.springboot.post.exception.PostNotFoundException;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.InvalidPasswordException;
@@ -57,6 +58,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFound() {
         return ResponseEntity.status(404).body("사용자를 찾을 수 없습니다.");
+    }
+
+    @ExceptionHandler(CommentNotFoundException.class)
+    public ResponseEntity<String> handleCommentNotFound() {
+        return ResponseEntity.status(404).body("댓글을 찾을 수 없습니다.");
     }
 
     @ExceptionHandler(InvalidPasswordException.class)

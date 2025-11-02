@@ -4,8 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
-import kr.adapterz.springboot.user.dto.EditNicknameRequest;
-import kr.adapterz.springboot.user.dto.EditPasswordRequest;
+import kr.adapterz.springboot.user.dto.NicknameUpdateRequest;
+import kr.adapterz.springboot.user.dto.PasswordUpdateRequest;
 import kr.adapterz.springboot.user.dto.SignupRequest;
 import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.service.UserService;
@@ -29,27 +29,27 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<MyProfileResponse> getMyInfo(HttpServletRequest request) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        MyProfileResponse response = userService.getUserDetail(userId);
+        MyProfileResponse response = userService.getUser(userId);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/me/nickname")
-    public ResponseEntity<MyProfileResponse> editNickname(
+    public ResponseEntity<MyProfileResponse> updateNickname(
             HttpServletRequest request,
-            @RequestBody @Valid EditNicknameRequest body
+            @RequestBody @Valid NicknameUpdateRequest body
     ) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        MyProfileResponse response = userService.editNickname(userId, body);
+        MyProfileResponse response = userService.updateNickname(userId, body);
         return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/me/password")
-    public ResponseEntity<Void> editPassword(
+    public ResponseEntity<Void> updatePassword(
             HttpServletRequest request,
-            @RequestBody @Valid EditPasswordRequest body
+            @RequestBody @Valid PasswordUpdateRequest body
     ) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        userService.editPassword(userId, body);
+        userService.updatePassword(userId, body);
         return ResponseEntity.noContent().build();
     }
 

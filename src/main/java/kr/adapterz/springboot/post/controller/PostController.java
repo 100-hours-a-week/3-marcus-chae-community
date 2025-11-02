@@ -5,7 +5,7 @@ import jakarta.validation.Valid;
 import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
-import kr.adapterz.springboot.post.dto.PostDetailResponse;
+import kr.adapterz.springboot.post.dto.PostResponse;
 import kr.adapterz.springboot.post.dto.PostUpdateRequest;
 import kr.adapterz.springboot.post.service.PostService;
 import lombok.RequiredArgsConstructor;
@@ -23,17 +23,17 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<PostDetailResponse> create(
+    public ResponseEntity<PostResponse> create(
             HttpServletRequest request,
             @RequestBody @Valid PostCreateRequest body
     ) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        PostDetailResponse response = postService.create(body, userId);
+        PostResponse response = postService.create(body, userId);
         return ResponseEntity.status(201).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PostDetailResponse> get(@PathVariable Long id) {
+    public ResponseEntity<PostResponse> get(@PathVariable Long id) {
         return ResponseEntity.status(200).body(postService.get(id));
     }
 
@@ -53,13 +53,13 @@ public class PostController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<PostDetailResponse> update(
+    public ResponseEntity<PostResponse> update(
             HttpServletRequest request,
             @PathVariable(name = "id") Long postId,
             @RequestBody @Valid PostUpdateRequest body
     ) {
         Long userId = SessionCookieUtils.extractUserId(request);
-        PostDetailResponse response = postService.update(userId, postId, body);
+        PostResponse response = postService.update(userId, postId, body);
         return ResponseEntity.ok(response);
     }
 
