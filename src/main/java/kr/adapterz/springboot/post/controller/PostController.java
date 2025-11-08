@@ -2,7 +2,7 @@ package kr.adapterz.springboot.post.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import kr.adapterz.springboot.auth.utils.SessionCookieUtils;
+import kr.adapterz.springboot.auth.utils.JwtAuthUtils;
 import kr.adapterz.springboot.post.dto.PostChunkResponse;
 import kr.adapterz.springboot.post.dto.PostCreateRequest;
 import kr.adapterz.springboot.post.dto.PostResponse;
@@ -27,7 +27,7 @@ public class PostController {
             HttpServletRequest request,
             @RequestBody @Valid PostCreateRequest body
     ) {
-        Long userId = SessionCookieUtils.extractUserId(request);
+        Long userId = JwtAuthUtils.extractUserId(request);
         PostResponse response = postService.create(body, userId);
         return ResponseEntity.status(201).body(response);
     }
@@ -58,7 +58,7 @@ public class PostController {
             @PathVariable(name = "id") Long postId,
             @RequestBody @Valid PostUpdateRequest body
     ) {
-        Long userId = SessionCookieUtils.extractUserId(request);
+        Long userId = JwtAuthUtils.extractUserId(request);
         PostResponse response = postService.update(userId, postId, body);
         return ResponseEntity.ok(response);
     }
@@ -68,7 +68,7 @@ public class PostController {
             HttpServletRequest request,
             @PathVariable(name = "id") Long postId
     ) {
-        Long userId = SessionCookieUtils.extractUserId(request);
+        Long userId = JwtAuthUtils.extractUserId(request);
         postService.delete(userId, postId);
         return ResponseEntity.noContent().build();
     }

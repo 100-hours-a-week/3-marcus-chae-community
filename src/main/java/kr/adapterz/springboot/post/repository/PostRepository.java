@@ -11,7 +11,6 @@ import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-
     Window<Post> findFirst10ByOrderByCreatedAtDesc(ScrollPosition position);
 
     /**
