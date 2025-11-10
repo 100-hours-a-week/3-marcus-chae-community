@@ -1,10 +1,9 @@
 package kr.adapterz.springboot.user.service;
 
-import kr.adapterz.springboot.auth.utils.PasswordUtils;
+import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.dto.NicknameUpdateRequest;
 import kr.adapterz.springboot.user.dto.PasswordUpdateRequest;
 import kr.adapterz.springboot.user.dto.SignupRequest;
-import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.entity.User;
 import kr.adapterz.springboot.user.exception.EmailAlreadyExistsException;
 import kr.adapterz.springboot.user.exception.InvalidPasswordException;
@@ -61,7 +60,7 @@ public class UserService {
     public void updatePassword(Long userId, PasswordUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
 
-        if (!PasswordUtils.matches(user, request.originalPassword(), passwordEncoder)) {
+        if (!passwordEncoder.matches(request.originalPassword(), user.getPassword())) {
             throw new InvalidPasswordException();
         }
 

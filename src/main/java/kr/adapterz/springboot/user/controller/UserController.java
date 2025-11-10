@@ -3,7 +3,7 @@ package kr.adapterz.springboot.user.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
-import kr.adapterz.springboot.auth.utils.JwtAuthUtils;
+import kr.adapterz.springboot.auth.utils.AuthenticationExtractor;
 import kr.adapterz.springboot.user.dto.MyProfileResponse;
 import kr.adapterz.springboot.user.dto.NicknameUpdateRequest;
 import kr.adapterz.springboot.user.dto.PasswordUpdateRequest;
@@ -28,7 +28,7 @@ public class UserController {
 
     @GetMapping("/me")
     public ResponseEntity<MyProfileResponse> getMyInfo(HttpServletRequest request) {
-        Long userId = JwtAuthUtils.extractUserId(request);
+        Long userId = AuthenticationExtractor.extractUserIdFromHeader(request);
         MyProfileResponse response = userService.getUser(userId);
         return ResponseEntity.ok(response);
     }
@@ -38,7 +38,7 @@ public class UserController {
             HttpServletRequest request,
             @RequestBody @Valid NicknameUpdateRequest body
     ) {
-        Long userId = JwtAuthUtils.extractUserId(request);
+        Long userId = AuthenticationExtractor.extractUserIdFromHeader(request);
         MyProfileResponse response = userService.updateNickname(userId, body);
         return ResponseEntity.ok(response);
     }
@@ -48,7 +48,7 @@ public class UserController {
             HttpServletRequest request,
             @RequestBody @Valid PasswordUpdateRequest body
     ) {
-        Long userId = JwtAuthUtils.extractUserId(request);
+        Long userId = AuthenticationExtractor.extractUserIdFromHeader(request);
         userService.updatePassword(userId, body);
         return ResponseEntity.noContent().build();
     }
@@ -58,7 +58,7 @@ public class UserController {
      */
     @DeleteMapping
     public ResponseEntity<Void> withdraw(HttpServletRequest request) {
-        Long userId = JwtAuthUtils.extractUserId(request);
+        Long userId = AuthenticationExtractor.extractUserIdFromHeader(request);
         userService.withdraw(userId);
         return ResponseEntity.noContent().build();
     }
