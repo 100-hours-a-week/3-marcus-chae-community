@@ -18,9 +18,6 @@ spring:
         use_sql_comments: true
 
 spring.cloud.aws:
-  credentials:
-    profile:
-      name: persona
   region:
     static: ap-northeast-2
 
@@ -48,3 +45,6 @@ logging:
     kr.adapterz: INFO
     org.hibernate.SQL: INFO
   exception-conversion-word: '%ex{short}'
+  file:
+    path: logs
+    name: logs/ktb-community.log
