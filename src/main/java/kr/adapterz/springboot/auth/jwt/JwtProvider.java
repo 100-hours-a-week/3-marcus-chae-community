@@ -3,6 +3,7 @@ package kr.adapterz.springboot.auth.jwt;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import kr.adapterz.springboot.auth.constants.AuthConstants;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -23,11 +24,13 @@ public class JwtProvider {
 
     /**
      * JWT 서명용 비밀키 (HMAC-SHA256)
-     * 프로덕션에서는 환경변수로 주입 권장
+     * 환경변수에서 주입받음
      */
-    private final Key key = Keys.hmacShaKeyFor(
-            "adapterzadapterzadapterzadapterzadapterz".getBytes()
-    );
+    private final Key key;
+
+    public JwtProvider(@Value("${jwt.secret}") String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     /**
      * Access Token 생성 (유효기간: 15분)

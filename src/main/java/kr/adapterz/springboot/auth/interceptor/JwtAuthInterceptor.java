@@ -96,7 +96,8 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
                 || path.equals("/privacy")
                 || path.equals("/terms")
                 || path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs")) {
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/actuator")) {
             return true;
         }
 

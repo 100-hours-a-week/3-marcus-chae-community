@@ -1,8 +1,12 @@
 spring:
+  application:
+    name: community
+  config:
+    import: aws-parameterstore:/ktb/community/
   datasource:
-    url: jdbc:mysql://localhost:3306/community?allowPublicKeyRetrieval=true&serverTimezone=UTC&useSSL=false
-    username: root
-    password: 1234
+    url: ${db.url}
+    username: ${db.username}
+    password: ${db.password}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -13,9 +17,30 @@ spring:
         format_sql: true
         use_sql_comments: true
 
+spring.cloud.aws:
+  credentials:
+    profile:
+      name: persona
+  region:
+    static: ap-northeast-2
+
+aws:
+  parameterstore:
+    enabled: true
+    region: ap-northeast-2
+
+jwt:
+  secret: ${jwt.secret}
+
 server:
   servlet:
     context-path: /api/v1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics # ALB의 헬스체크를 위해 health, 요청 처리 모니터링하기 위해 metrics
 
 logging:
   level:
