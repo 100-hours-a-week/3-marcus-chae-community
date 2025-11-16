@@ -1,5 +1,7 @@
 package kr.adapterz.springboot.common.exception;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import jakarta.servlet.http.HttpServletRequest;
 import kr.adapterz.springboot.auth.exception.InvalidCredentialsException;
 import kr.adapterz.springboot.auth.exception.UnauthenticatedException;
 import kr.adapterz.springboot.auth.exception.UnauthorizedException;
@@ -19,11 +21,43 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    /**
+     * JWT 토큰 만료 예외 처리
+     * <p>
+     * Access Token과 Refresh Token의 만료를 구분하여 처리
+     * 경로가 /auth/refresh인 경우 Refresh Token 만료로 간주하고,
+     * 그 외의 경우 Access Token 만료로 처리
+     * </p>
+     *
+     * @param request HTTP 요청 (경로 확인용)
+     * @return 401 상태코드와 상세 에러 정보
+     */
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Map<String, String>> handleExpiredJwt(HttpServletRequest request) {
+        String path = request.getServletPath();
+
+        if ("/auth/refresh".equals(path)) {
+            // Refresh Token 만료
+            return ResponseEntity.status(401).body(Map.of(
+                    "errorCode", "REFRESH_TOKEN_EXPIRED",
+                    "message", "리프레시 토큰이 없거나 만료되었습니다."
+            ));
+        } else {
+            // Access Token 만료
+            return ResponseEntity.status(401).body(Map.of(
+                    "errorCode", "ACCESS_TOKEN_EXPIRED",
+                    "message", "액세스 토큰이 만료되었습니다.",
+                    "refreshEndpoint", "/api/v1/auth/refresh"
+            ));
+        }
+    }
 
     @ExceptionHandler(UnauthenticatedException.class)
     public ResponseEntity<String> handleUnauthenticated() {
