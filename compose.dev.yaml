@@ -1,0 +1,14 @@
+name: my-backend
+
+services:
+  backend:
+    image: docker.marcuth.store/community-backend:latest
+    container_name: my-springboot
+    ports:
+      - "8080:8080"
+    restart: always
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      AWS_REGION: ap-northeast-2
+      # db.url, db.username, db.password, jwt.secret은
+      # Parameter Store(/ktb/community/)에서 자동으로 읽힘
