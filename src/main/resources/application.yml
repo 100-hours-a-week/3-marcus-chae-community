@@ -2,7 +2,7 @@ spring:
   application:
     name: community
   config:
-    import: aws-parameterstore:/ktb/community/
+    import: optional:aws-parameterstore:/ktb/community/
   datasource:
     url: ${db.url}
     username: ${db.username}

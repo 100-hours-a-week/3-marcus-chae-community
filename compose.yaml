@@ -1,0 +1,46 @@
+# 만약 프로덕션에도 이 설정파일이 쓰이게 된다면 민감정보들은 secret 섹션으로 관리하도록 리팩터링 돼야 함.
+name: my-backend
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: my-mysql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - my-community-net
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: docker.marcuth.store/community-backend:latest # image와 build 섹션이 함께 있을 때는 image pull -> cache -> build 순으로 체크. 각 단계에서 실패하면 다음으로 넘어감.
+    container_name: my-springboot
+    ports:
+      - "8080:8080"
+    restart: on-failure:5
+    environment:
+      SPRING_PROFILES_ACTIVE: local
+      db.url: jdbc:mysql://mysql:3306/mydb
+      db.username: myuser
+      db.password: mypassword
+      jwt.secret: temporary-docker-secret-key-must-be-at-least-32-characters-long
+    networks:
+      - my-community-net
+    depends_on:
+      - mysql
+
+volumes:
+  mysql-data:
+
+networks:
+  my-community-net:
+    external: true

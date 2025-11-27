@@ -37,8 +37,5 @@ out/
 .vscode/
 /CLAUDE.md
 
-### Local Configuration ###
-src/main/resources/application-local.yml
-
 ### Logs ###
 logs/
