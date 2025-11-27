@@ -2,7 +2,7 @@ name: my-backend
 
 services:
   backend:
-    image: docker.marcuth.store/community-backend:latest
+    image: dockdoinkorea/community-backend:latest
     container_name: my-springboot
     ports:
       - "8080:8080"

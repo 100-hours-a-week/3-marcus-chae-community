@@ -22,7 +22,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: docker.marcuth.store/community-backend:latest # image와 build 섹션이 함께 있을 때는 image pull -> cache -> build 순으로 체크. 각 단계에서 실패하면 다음으로 넘어감.
+    image: dockdoinkorea/community-backend:latest # image와 build 섹션이 함께 있을 때는 image pull -> cache -> build 순으로 체크. 각 단계에서 실패하면 다음으로 넘어감.
     container_name: my-springboot
     ports:
       - "8080:8080"
