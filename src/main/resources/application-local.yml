@@ -6,3 +6,7 @@ spring:
 logging:
   level:
     kr.adapterz: DEBUG
+
+cors:
+  enabled: true
+  allowed-origins: http://localhost:3000

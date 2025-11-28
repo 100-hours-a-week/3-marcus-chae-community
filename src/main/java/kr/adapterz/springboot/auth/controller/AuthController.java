@@ -14,6 +14,7 @@ import kr.adapterz.springboot.user.entity.User;
 import kr.adapterz.springboot.user.exception.UserNotFoundException;
 import kr.adapterz.springboot.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -29,6 +30,9 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtProvider jwtProvider;
+
+    @Value("${spring.profiles.active:}")
+    private String activeProfile;
 
     @PostMapping
     public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest req) {
@@ -103,6 +107,8 @@ public class AuthController {
         return ResponseCookie.from(AuthConstants.REFRESH_TOKEN_COOKIE_NAME, token)
                 .path(AuthConstants.REFRESH_TOKEN_COOKIE_PATH)
                 .httpOnly(true)
+                .sameSite("None")
+                .secure(!"local".equals(activeProfile))  // local은 HTTP, 그 외는 HTTPS 강제
                 .maxAge(AuthConstants.REFRESH_TOKEN_MAX_AGE)
                 .build();
     }

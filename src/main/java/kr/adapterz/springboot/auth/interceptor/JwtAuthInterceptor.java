@@ -91,6 +91,11 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
      * @return true: 공개 경로, false: 인증 필요
      */
     private boolean isPublicPath(String path, String method) {
+        // CORS preflight 요청은 항상 허용
+        if ("OPTIONS".equals(method)) {
+            return true;
+        }
+
         // 공개 페이지 및 개발 도구
         if (path.startsWith("/error")
                 || path.equals("/privacy")

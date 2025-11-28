@@ -2,7 +2,9 @@ package kr.adapterz.springboot.config;
 
 import kr.adapterz.springboot.auth.interceptor.JwtAuthInterceptor;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -18,6 +20,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     private final JwtAuthInterceptor jwtAuthInterceptor;
 
+    @Value("${cors.enabled:false}")
+    private boolean corsEnabled;
+
+    @Value("${cors.allowed-origins:http://localhost:3000}")
+    private String allowedOrigins;
+
     /**
      * 인터셉터 등록
      * <p>
@@ -26,7 +34,6 @@ public class WebMvcConfig implements WebMvcConfigurer {
      * </p>
      * <p>
      * <strong>주의:</strong> excludePathPatterns는 HTTP 메서드를 구분하지 않음
-     * 메서드별 공개 경로 처리는 {@link JwtAuthInterceptor#isPublicPath} 내부에서 수행
      * </p>
      */
     @Override
@@ -43,5 +50,23 @@ public class WebMvcConfig implements WebMvcConfigurer {
                         "/swagger-ui/**",
                         "/v3/api-docs/**"
                 );
+    }
+
+    /**
+     * CORS 설정 (로컬 개발 환경용)
+     * <p>
+     * 로컬 개발 시 프론트엔드(localhost:3000)에서 백엔드(localhost:8080)로 직접 요청 가능하도록 설정.
+     * 배포 환경에서는 ALB가 라우팅하므로 CORS 불필요 (cors.enabled=false)
+     * </p>
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        if (corsEnabled) {
+            registry.addMapping("/**")
+                    .allowedOrigins(allowedOrigins.split(","))
+                    .allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE")
+                    .allowCredentials(true)  // Refresh Token 쿠키 전송 허용
+                    .maxAge(3600);
+        }
     }
 }
