@@ -4,13 +4,10 @@ on:
   push:
     branches:
       - develop
-  pull_request:
-    branches:
-      - develop
 
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  build-and-push:
+    runs-on: ubuntu-22.04-arm
 
     steps:
       - name: Checkout code
@@ -41,6 +38,14 @@ jobs:
           push: true
           tags: dockdoinkorea/community-backend:latest
           platforms: linux/arm64
+
+  deploy:
+    runs-on: ubuntu-22.04-arm
+    needs: build-and-push
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Copy compose file to EC2
         env:
