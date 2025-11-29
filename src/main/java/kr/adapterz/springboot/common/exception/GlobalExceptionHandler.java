@@ -41,7 +41,12 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ExpiredJwtException.class)
     public ResponseEntity<Map<String, String>> handleExpiredJwt(HttpServletRequest request) {
-        String path = request.getServletPath();
+        // 컨텍스트 패스를 제외한 실제 요청 경로를 직접 계산
+        String requestUri = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = (contextPath != null && !contextPath.isEmpty() && requestUri.startsWith(contextPath))
+                ? requestUri.substring(contextPath.length())
+                : requestUri;
 
         if ("/auth/refresh".equals(path)) {
             // Refresh Token 만료

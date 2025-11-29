@@ -50,7 +50,13 @@ public class JwtAuthInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
             throws Exception {
-        String path = request.getServletPath();
+        // 컨텍스트 패스를 제외한 실제 요청 경로를 직접 계산
+        String requestUri = request.getRequestURI();
+        String contextPath = request.getContextPath();
+        String path = (contextPath != null && !contextPath.isEmpty() && requestUri.startsWith(contextPath))
+                ? requestUri.substring(contextPath.length())
+                : requestUri;
+
         String method = request.getMethod();
 
         // 1. 공개 경로 체크 (메서드별 구분)
