@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySQL;DATABASE_TO_LOWER=TRUE;NON_KEYWORDS=USER
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  config:
+    import: optional:aws-parameterstore:/ktb/community/
+
+  sql:
+    init:
+      mode: never  # @Sql로 제어
+
+# AWS Parameter Store 비활성화
+aws:
+  parameterstore:
+    enabled: false
+
+# JWT 시크릿 (테스트용 더미 값)
+jwt:
+  secret: test-jwt-secret-key-for-integration-test-minimum-256-bits-long-value
+
+# CORS 비활성화
+cors:
+  enabled: false
+
+logging:
+  level:
+    kr.adapterz: DEBUG
+    org.hibernate.SQL: DEBUG
