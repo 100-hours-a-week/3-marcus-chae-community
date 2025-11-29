@@ -19,7 +19,13 @@ RUN ./gradlew build -x test --no-daemon
 
 # Stage 2: Runtime
 FROM eclipse-temurin:21-jre-alpine
+
+# JVM 메모리 설정 환경 변수 (기본값: 컨테이너 메모리의 70%)
+ENV JAVA_OPTS="-XX:+UseContainerSupport -XX:MinRAMPercentage=70.0 -XX:MaxRAMPercentage=70.0 -XX:InitialRAMPercentage=70.0"
+
 WORKDIR /app
 COPY --from=builder /build/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+
+SHELL ["/bin/bash", "-c"]
+ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
