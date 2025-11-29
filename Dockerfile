@@ -18,7 +18,7 @@ COPY src src
 RUN ./gradlew build -x test --no-daemon
 
 # Stage 2: Runtime
-FROM eclipse-temurin:21-jre-jammy
+FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /build/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
