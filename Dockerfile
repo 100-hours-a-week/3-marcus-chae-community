@@ -27,5 +27,4 @@ WORKDIR /app
 COPY --from=builder /build/build/libs/*-SNAPSHOT.jar app.jar
 EXPOSE 8080
 
-SHELL ["/bin/bash", "-c"]
-ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
+ENTRYPOINT ["sh", "-c", "exec java $JAVA_OPTS -jar app.jar"]
