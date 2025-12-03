@@ -38,7 +38,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public MyProfileResponse getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
-        return new MyProfileResponse(user.getId(), user.getEmail(), user.getNickname());
+        return new MyProfileResponse(user.getId(), user.getEmail(), user.getNickname(), user.getCreatedAt());
     }
 
     @Transactional
@@ -53,7 +53,7 @@ public class UserService {
         user.setNickname(request.nickname());
         User savedUser = userRepository.save(user);
 
-        return new MyProfileResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname());
+        return new MyProfileResponse(savedUser.getId(), savedUser.getEmail(), savedUser.getNickname(), savedUser.getCreatedAt());
     }
 
     @Transactional
