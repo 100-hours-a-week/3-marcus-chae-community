@@ -14,15 +14,21 @@ public record PostChunkResponse(
             String title,
             String authorNickname,
             LocalDateTime createdAt,
-            Long viewCount
+            Long viewCount,
+            Long commentCount
     ) {
         public static PostSummary from(Post post) {
+            return from(post, null);
+        }
+
+        public static PostSummary from(Post post, Long commentCount) {
             return new PostSummary(
                     post.getId(),
                     post.getTitle(),
                     post.getAuthor().getNickname(),
                     post.getCreatedAt(),
-                    post.getViewCount()
+                    post.getViewCount(),
+                    commentCount != null ? commentCount : 0L
             );
         }
     }

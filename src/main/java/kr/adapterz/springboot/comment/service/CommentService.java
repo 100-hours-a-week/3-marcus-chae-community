@@ -18,7 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +41,38 @@ public class CommentService {
         return commentRepository.findByPostId(postId).stream()
                 .map(CommentResponse::from)
                 .toList();
+    }
+
+    /**
+     * 특정 게시글의 댓글 수 조회
+     *
+     * @param postId
+     *
+     * @return
+     */
+    @Transactional(readOnly = true)
+    public long getCommentCount(Long postId) {
+        return commentRepository.countByPostId(postId);
+    }
+
+    /**
+     * 여러 게시글의 댓글 수를 배치로 조회 (N+1 문제 방지)
+     *
+     * @param postIds
+     *
+     * @return 게시글 ID를 키로, 댓글 수를 값으로 하는 Map
+     */
+    @Transactional(readOnly = true)
+    public Map<Long, Long> findCommentCountsByPostIds(List<Long> postIds) {
+        if (postIds.isEmpty()) {
+            return Map.of();
+        }
+
+        return commentRepository.countByPostIdIn(postIds).stream()
+                .collect(Collectors.toMap(
+                        CommentRepository.CommentCountProjection::getPostId,
+                        CommentRepository.CommentCountProjection::getCount
+                ));
     }
 
     @Transactional

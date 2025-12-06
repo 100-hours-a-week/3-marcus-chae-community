@@ -58,8 +58,11 @@ public class PostService {
         post.incrementViewCount();
 
         List<CommentResponse> comments = commentService.findByPostId(post.getId());
+        // 현재는 댓글 전체 조회이므로 size()로 개수 계산
+        // TODO: 댓글 페이지네이션 추가 시 commentService.getCommentCount(postId) 사용으로 변경 필요
+        long commentCount = comments.size();
 
-        return PostResponse.from(post, comments);
+        return PostResponse.from(post, comments, commentCount);
     }
 
     @Transactional(readOnly = true)
@@ -75,8 +78,19 @@ public class PostService {
 
         Window<Post> window = postRepository.findFirst10ByOrderByCreatedAtDesc(position);
 
+        // 배치 쿼리로 모든 게시글의 댓글 수 조회 (N+1 문제 방지)
+        List<Long> postIds = window.getContent().stream()
+                .map(Post::getId)
+                .toList();
+        Map<Long, Long> commentCounts = commentService.findCommentCountsByPostIds(postIds);
+
         // 게시글에서 요약정보만 추출
-        List<PostChunkResponse.PostSummary> summaries = window.getContent().stream().map(PostChunkResponse.PostSummary::from).toList();
+        List<PostChunkResponse.PostSummary> summaries = window.getContent().stream()
+                .map(post -> PostChunkResponse.PostSummary.from(
+                        post,
+                        commentCounts.getOrDefault(post.getId(), 0L)
+                ))
+                .toList();
 
         // 다음 cursor 정보
         PostChunkResponse.CursorInfo cursorInfo;
