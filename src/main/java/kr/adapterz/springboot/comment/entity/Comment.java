@@ -3,6 +3,8 @@ package kr.adapterz.springboot.comment.entity;
 import jakarta.persistence.*;
 import kr.adapterz.springboot.post.entity.Post;
 import kr.adapterz.springboot.user.entity.User;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +33,7 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "post_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Post post;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
