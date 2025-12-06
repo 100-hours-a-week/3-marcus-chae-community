@@ -13,7 +13,8 @@ public record PostResponse(
         String content,
         LocalDateTime createdAt,
         AuthorInfo author,
-        List<CommentResponse> comments
+        List<CommentResponse> comments,
+        Long viewCount
 ) {
     public static PostResponse from(Post post) {
         return new PostResponse(
@@ -22,7 +23,8 @@ public record PostResponse(
                 post.getContent(),
                 post.getCreatedAt(),
                 AuthorInfo.from(post.getAuthor()),
-                null
+                null,
+                post.getViewCount()
         );
     }
 
@@ -33,7 +35,8 @@ public record PostResponse(
                 post.getContent(),
                 post.getCreatedAt(),
                 AuthorInfo.from(post.getAuthor()),
-                comments
+                comments,
+                post.getViewCount()
         );
     }
 }

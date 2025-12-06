@@ -47,9 +47,15 @@ public class PostService {
      *
      * @return
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public PostResponse get(Long postId) {
         Post post = postRepository.findWithAuthorById(postId).orElseThrow(PostNotFoundException::new);
+
+        // 조회수 증가 (벌크 업데이트)
+        postRepository.incrementViewCount(postId);
+
+        // 메모리의 엔티티도 동기화
+        post.incrementViewCount();
 
         List<CommentResponse> comments = commentService.findByPostId(post.getId());
 
