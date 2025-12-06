@@ -8,9 +8,9 @@ import lombok.Setter;
 
 import java.time.LocalDateTime;
 
-@NoArgsConstructor
 @Entity
 @Getter
+@NoArgsConstructor
 @Table(indexes = {
     @Index(name = "idx_post_view_count", columnList = "viewCount")
 })

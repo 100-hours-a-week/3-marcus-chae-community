@@ -17,15 +17,7 @@ public record PostResponse(
         Long viewCount
 ) {
     public static PostResponse from(Post post) {
-        return new PostResponse(
-                post.getId(),
-                post.getTitle(),
-                post.getContent(),
-                post.getCreatedAt(),
-                AuthorInfo.from(post.getAuthor()),
-                null,
-                post.getViewCount()
-        );
+        return from(post, null);
     }
 
     public static PostResponse from(Post post, List<CommentResponse> comments) {
