@@ -34,6 +34,7 @@ src/main/java/kr/adapterz/springboot/
 ├── common/     # 공통 유틸리티
 └── config/     # 설정
 ```
+FE GitHub Repository: https://github.com/100-hours-a-week/3-marcus-chae-community-fe
 
 각 도메인 패키지는 controller, service, repository, entity, dto, exception으로 구성
 
